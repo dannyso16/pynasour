@@ -4,10 +4,8 @@ from player import *
 from enemy import *
 from constants import (WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS,
-                       HIGH_SCORE, SCORE)
-
-# TODO: スコアの実装 ok
-# TODO: 背景の実装
+                       HIGH_SCORE, SCORE,
+                       DEBUG)
 
 # === MAIN ===
 class App:
@@ -24,19 +22,19 @@ class App:
         self.player = Player()
         self.enemy  = Enemy()
         self.backgnd  =  BackGround()
-        # TODO: タイトル画面
-        self.player.beGameover()
+        # TODO: make game title
+        self.player.beGameover() # not good way ...
 
-        pyxel.load(r"C:\Users\HOME\Documents\GitHub\pynasour\asset\asset.pyxel")
+        pyxel.load(r"C:\Users\HOME\Documents\GitHub\pynasour\asset\asset.pyxel") # change here when use
         pyxel.run(self.update, self.draw)
 
     def update(self):
         global HIGH_SCORE, SCORE, FPS
-        self.backgnd.update()
+        self.backgnd.update()  # execution order: back layer to front layer
         self.enemy.update()
         self.player.update()
 
-        # score
+        # score update
         if (Player.getState()!="IDLE"
         and pyxel.frame_count%(FPS//10)==0): # 1 sec -> score +10
             SCORE += 1
@@ -44,7 +42,11 @@ class App:
         # === Restart ===
         if Player.getState()=="IDLE":
             if pyxel.btn(pyxel.KEY_SPACE):
+                # save high-score
                 HIGH_SCORE = max(HIGH_SCORE, SCORE)
+                with open(r"asset\score.txt", "w") as f:
+                    f.write("High score: \n{}".format(HIGH_SCORE))
+                # initialize state
                 SCORE = 0
                 self.backgnd.initialize()
                 self.enemy.initialize()
@@ -52,7 +54,7 @@ class App:
 
 
     def draw(self):
-        global SCORE, HIGH_SCORE, WINDOW_HEIGHT, WINDOW_WIDTH
+        global SCORE, HIGH_SCORE, WINDOW_HEIGHT, WINDOW_WIDTH, DEBUG
         pyxel.cls(ColPal.gray_dark)
         self.backgnd.blt()
         self.enemy.blt()
@@ -60,11 +62,13 @@ class App:
 
         # show score
         pyxel.text(WINDOW_WIDTH-50, 5, "HI {}  {}".format(HIGH_SCORE, SCORE), ColPal.white)
-        pyxel.text(0, 10, "Frame: {}".format(pyxel.frame_count), ColPal.orange)
+        # if gameover, show restart button
         if Player.getState()=="IDLE":
             pyxel.text(WINDOW_WIDTH//2-5, WINDOW_HEIGHT//2-5,
                         "GAME OVER\n[SPACE] TO CONTINUE", ColPal.white)
             pyxel.blt(WINDOW_WIDTH//2-48, WINDOW_HEIGHT//2-16,
                         App.IMG_ID, *App.BTN_RESTART.getRect())
 
+        if DEBUG:
+            pyxel.text(0, 20, "Frame: {}".format(pyxel.frame_count), ColPal.orange)
 App()

@@ -1,3 +1,4 @@
+from copy import deepcopy
 import pyxel
 import random
 from utils import *
@@ -5,18 +6,14 @@ from player import *
 from constants import (WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS, ANIM_FPS,
                        HIGH_SCORE, SCORE,
-                       COLKEY)
-
-# TODO: 敵の出現の乱数をどうするのか
-# TODO: 鳥の出現のスコアはいつから
-# TODO: 速度の変化は
-# TODO: 当たり判定 調整
+                       COLKEY,
+                       DEBUG)
 
 class Enemy:
     """Enemy: サボテン，プテラノドン"""
     # === CLASS VARIABLES ===
     IMG_ID = 0
-    # cactus
+    # cactus img
     CACTUS_W, CACTUS_H = 16, 24
     Cactus_big1 = Rect(CACTUS_W*0, 32, CACTUS_W, CACTUS_H, COLKEY)
     Cactus_big2 = Rect(CACTUS_W*1, 32, CACTUS_W, CACTUS_H, COLKEY)
@@ -25,36 +22,71 @@ class Enemy:
     Cactus_sml2 = Rect(CACTUS_W*4, 32, CACTUS_W, CACTUS_H, COLKEY)
     Cactus_sml3 = Rect(CACTUS_W*5, 32, CACTUS_W, CACTUS_H, COLKEY)
     CACTUS_ANIMs = [[Cactus_big1, Cactus_big2, Cactus_big3],
-                    [Cactus_sml1, Cactus_sml2, Cactus_sml3]]
+                    [Cactus_sml1, Cactus_sml2]]
 
-    # Ptera
+    # Ptera img
     PTERA_W, PTERA_H = 24, 24
     dwn   = Rect(PTERA_W*0, 56, PTERA_W, PTERA_H, COLKEY)
     up    = Rect(PTERA_W*1, 56, PTERA_W, PTERA_H, COLKEY)
     PTERA_ANIMs = [[dwn, up]]
 
-    INIT_POS = Vec(280, 73)
-    cur_anim = CACTUS_ANIMs[0]
-    velocity = 4               # this is common with the speed of Ground
-    # TODO: 速度を変更できるように
+    # enemy spawn interval is between [MIN_INTERVAL, MAX_INTERVAL]
+    # enemy spawns in SPAWN_POS or further position from Dinasour
+    ENEMY_NUM          = 6
+    MIN_INTERVAL       = 85
+    MAX_INTERVAL       = 150
+    SPAWN_POS          = 280
+    GND_HEIGHT         = 73
+    PTERA_SPAWN_RATIO  = .2    # ptera spawn rate [0 - 1]
+
     COLLIDE_OFFSET = 4         # between [0 - Player_img_size]
                                # 小さいほど厳しい判定
 
     def __init__(self):
-        """pos: (x, y)
-        velocity: 猫の進行の向き"""
         self.initialize()
         self.showInfo()
 
+    def initialize(self):
+        self.velocity = Vec(-4, 0)
+        interval = random.randrange(self.MIN_INTERVAL, self.MAX_INTERVAL)
+        self.INIT_POS = [Vec(self.SPAWN_POS + i*self.MAX_INTERVAL + interval,
+                             self.GND_HEIGHT) for i in range(self.ENEMY_NUM)]
+
+        self.cur_anim = [None]*self.ENEMY_NUM
+        self.pos      = deepcopy(self.INIT_POS)
+        # enemy is cactus or ptera
+        for i in range(self.ENEMY_NUM):
+            if random.random() < self.PTERA_SPAWN_RATIO: # ptera
+                self.cur_anim[i] = Enemy.PTERA_ANIMs[0]
+                self.pos[i].y -= 40*random.randrange(0, 2)
+            else:                     # big or small Cactus
+                self.cur_anim[i] = Enemy.CACTUS_ANIMs[random.randrange(0, 2)]
+
+    def showInfo(self):
+        pass
+
     def update(self):
-        # print( self.velocity.x, self.velocity.y, self.pos.y)
         if Player.getState()=="IDLE":
             return
         if pyxel.frame_count%2:
-            self.pos = Vec(self.pos.x + self.velocity.x, self.pos.y)
+            for i in range(len(self.pos)):
+                self.pos[i] = Vec(self.pos[i].x + self.velocity.x,
+                                        self.pos[i].y)
 
-        if self.pos.x < -20:
-            self.initialize()
+        # 左端についたら右端に戻す
+        for i in range(self.ENEMY_NUM):
+            if self.pos[i].x < -50:
+                # reset pos
+                interval = random.randrange(self.MIN_INTERVAL, self.MAX_INTERVAL)
+                spawn_x = max(self.pos[i-1].x, self.SPAWN_POS)
+                self.pos[i] = Vec(spawn_x + interval, self.GND_HEIGHT)
+
+                # select cactus or ptera
+                if random.random() < self.PTERA_SPAWN_RATIO:  # ptera
+                    self.cur_anim[i] = Enemy.PTERA_ANIMs[0]
+                    self.pos[i].y -= 40*random.randrange(0, 2)
+                else:                                               # cactus
+                    self.cur_anim[i] = Enemy.CACTUS_ANIMs[random.randrange(0, 2)]
 
         if self.collideWithPlayer():
             Player.beGameover()
@@ -63,37 +95,25 @@ class Enemy:
     def collideWithPlayer(self):
         """return: (bool) collide with Player or not """
         p_pos = Player.getPos()
-        px, py = p_pos.x, p_pos.y
-        pw, ph = Player.getSize()
-        cx, cy = self.pos.x, self.pos.y
-        if ( abs(cx-px) < pw-Enemy.COLLIDE_OFFSET
-        and abs(cy-py) < ph-Enemy.COLLIDE_OFFSET ):
-            return True
+        playr_x, playr_y = p_pos.x, p_pos.y
+        playr_w, playr_h = Player.getSize()
+        for pos in self.pos:
+            enemy_x, enemy_y = pos.x, pos.y
+            if ( abs(enemy_x - playr_x) < playr_w - Enemy.COLLIDE_OFFSET
+             and abs(enemy_y - playr_y) < playr_h - Enemy.COLLIDE_OFFSET ):
+                return True
         else:
             return False
 
     def blt(self):
-        global ANIM_FPS
-        f = (pyxel.frame_count//ANIM_FPS)%len(self.cur_anim)
-        pyxel.blt(self.pos.x, self.pos.y,
-                    Enemy.IMG_ID, *self.cur_anim[f].getRect())
-        pyxel.text(0, 20,
-                    "Enemy_pos: ({},{})".format(self.pos.x, self.pos.y), ColPal.orange)
-
-
-    def initialize(self):
-        self.velocity = Vec(-4, 0)
-        if random.random()<0.2:       # ptera
-            self.cur_anim = Enemy.PTERA_ANIMs[0]
-            gnd_y = self.INIT_POS.y   # height of Ground
-            self.pos = Vec(self.INIT_POS.x,
-                            gnd_y -40*random.randrange(0,2))
-        else:                         # cactus
-            self.cur_anim = Enemy.CACTUS_ANIMs[random.randrange(0,2)] # big or small cactus
-            self.pos = self.INIT_POS
-
-    def showInfo(self):
-        print("hello")
+        global ANIM_FPS, DEBUG
+        for i,(pos,cur_anim) in enumerate(zip(self.pos, self.cur_anim)):
+            f = (pyxel.frame_count//ANIM_FPS)%len(cur_anim)
+            pyxel.blt(pos.x, pos.y,
+                      Enemy.IMG_ID, *cur_anim[f].getRect())
+            if DEBUG:
+                pyxel.text(50, i*10,
+                        "Enemy{}: ({},{})".format(i, pos.x, pos.y), ColPal.orange)
 
     def getVelocity(self):
         # TODO: change velocity along the score increase
@@ -117,6 +137,19 @@ class BackGround:
     def __init__(self):
         self.initialize()
         self.showInfo()
+
+    def initialize(self):
+        self.cloud_velocity = Vec(-1, 0)
+        self.gnd_velocity   = Vec(-4, 0) # change with enemy's velocity
+        # cloud pos(list)
+        self.cloud_pos = deepcopy(self.CLOUD_INIT_POS)
+
+        # ground pos
+        self.gnd_pos   = deepcopy(self.GND_INIT_POS)
+
+    def showInfo(self):
+        # print("hello")
+        pass
 
     def update(self):
         if Player.getState()=="IDLE":
@@ -147,27 +180,3 @@ class BackGround:
         for i,pos in enumerate(self.gnd_pos):
             pyxel.blt(pos.x, pos.y,
                       BackGround.IMG_ID, *BackGround.GND_normal.getRect())
-            # pyxel.text(0, 30+i*10,
-            #             "Gnd_pos: ({},{})".format(
-            #             pos.x, pos.y), 3)
-
-
-    def initialize(self):
-        self.cloud_velocity = Vec(-1, 0)
-        self.gnd_velocity   = Vec(-4, 0) # change with enemy's velocity
-        # cloud pos(list)
-        self.cloud_pos = [self.CLOUD_INIT_POS[i]
-                            for i in range(len(self.CLOUD_INIT_POS))]
-        # ground pos
-        self.gnd_pos = [self.GND_INIT_POS[i]
-                            for i in range(len(self.GND_INIT_POS))]
-
-    def showInfo(self):
-        print("hello")
-
-
-
-
-# === example=====
-# c = Enemy()
-# c.update(pos=Vec(0,0), velocity=Vec(1,1))

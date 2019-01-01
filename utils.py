@@ -1,14 +1,14 @@
-# TODO: enum
+# TODO: colpal to enum
 import gzip
 import inspect
 import os
 import pickle
 import pyxel
 
-"""function margeAndSave
-class Vec
-class ColPal
-class Rect
+"""(function) margeAndSave
+(class) Vec
+(class) ColPal
+(class) Rect
 """
 
 def margePyxelFiles(img_file_path, music_file_path, save_to):
@@ -61,18 +61,14 @@ def margePyxelFiles(img_file_path, music_file_path, save_to):
     pyxel.quit()
 
 
-# margePyxelFiles(r"C:\Users\HOME\pyxel\dinasour\asset\asset.pyxel",
-#             r"C:\Users\HOME\pyxel\dinasour\asset\akune.pyxel",
-#             r"C:\Users\HOME\pyxel\dinasour\asset\asset_akune.pyxel")
-
-
 class Vec:
-    """座標の管理"""
+    """2d coordinate"""
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
 class ColPal:
+    """color pallete for pyxel"""
     black = 0
     navy = 1
     purple = 2
