@@ -27,9 +27,7 @@ class App:
         # TODO: タイトル画面
         self.player.beGameover()
 
-        # pyxel.image(Player.IMG_ID).load(0, 0,
-        #     "C:/code/python_script/Library/pyxel/asset/cat_16x16.png")
-        pyxel.load(r"C:\Users\HOME\pyxel\dinasour\asset\asset_akune.pyxel")
+        pyxel.load(r"C:\Users\HOME\Documents\GitHub\pynasour\asset\asset.pyxel")
         pyxel.run(self.update, self.draw)
 
     def update(self):
