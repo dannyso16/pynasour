@@ -37,7 +37,7 @@ class Enemy:
     MAX_INTERVAL       = 150
     SPAWN_POS          = 280
     GND_HEIGHT         = 73
-    PTERA_SPAWN_RATIO  = .2    # ptera spawn rate [0 - 1]
+    PTERA_SPAWN_RATIO  = .4    # ptera spawn rate [0 - 1]
 
     COLLIDE_OFFSET = 4         # between [0 - Player_img_size]
                                # 小さいほど厳しい判定

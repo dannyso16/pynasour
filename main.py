@@ -25,7 +25,7 @@ class App:
         # TODO: make game title
         self.player.beGameover() # not good way ...
 
-        pyxel.load(r"C:\Users\HOME\Documents\GitHub\pynasour\asset\asset.pyxel") # change here when use
+        pyxel.load("asset/asset.pyxel")
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -41,10 +41,10 @@ class App:
 
         # === Restart ===
         if Player.getState()=="IDLE":
-            if pyxel.btn(pyxel.KEY_SPACE):
+            if pyxel.btnp(pyxel.KEY_SPACE):
                 # save high-score
                 HIGH_SCORE = max(HIGH_SCORE, SCORE)
-                with open(r"asset\score.txt", "w") as f:
+                with open("asset/score.txt", "w") as f:
                     f.write("High score: \n{}".format(HIGH_SCORE))
                 # initialize state
                 SCORE = 0

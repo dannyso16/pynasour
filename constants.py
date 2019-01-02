@@ -11,9 +11,9 @@ ANIM_FPS = FPS//5
 
 
 SCORE = 0
-with open(r"asset\score.txt", "r") as f:
+with open("asset/score.txt", "r") as f:
     l = f.readlines()
     HIGH_SCORE = int(l[1])
 
-# BackGround color of img bank 
+# BackGround color of img bank
 COLKEY = ColPal.pink

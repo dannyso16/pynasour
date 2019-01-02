@@ -38,7 +38,7 @@ class Player:
         # TODO: Add state DUCKING
 
     def showInfo(self):
-        print("getSize: ", self.getSize())
+        pass
 
     def update(self):
         # jump with [SPACE] or [UP]
