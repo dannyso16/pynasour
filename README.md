@@ -3,7 +3,7 @@ Chrome T-Rex's clone in Python 3 using __pyxel__ library.
 
 Avoid enemies with __SPACE__ key.
 
-![readme](C:\Users\HOME\Documents\GitHub\pynasour\media\readme.gif)
+![play](media\readme.gif)
 
 
 
@@ -20,5 +20,5 @@ Avoid enemies with __SPACE__ key.
 - Game speed is constant now
 - feel free to use sprite.
 
-![sprite](C:\Users\HOME\Documents\GitHub\pynasour\media\sprite.gif)
+![sprite](media\sprite.gif)
 
