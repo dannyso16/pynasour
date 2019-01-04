@@ -1,3 +1,6 @@
+# this is a test program
+# which shows dancing dinosaur and cactus 
+
 import pyxel
 from utils import *
 from player import *
@@ -7,7 +10,7 @@ class App:
     def __init__(self):
         pyxel.init(120, 60, caption="Sprites")
         # pyxel.load("asset/asset.pyxel")
-        pyxel.load(r"C:\Users\HOME\pyxel\dinasour\asset\asset.pyxel")
+        pyxel.load("asset/asset.pyxel")
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -15,7 +18,8 @@ class App:
             pyxel.quit()
 
     def draw(self):
-        # 謎のダンスフロア間
+        # colorpalette is defined [0 - 15]
+        # when you set interger over 15, it looks interesting
         pyxel.cls(25)
 
         # === dino === (24, 32)
@@ -51,7 +55,7 @@ class App:
         pyxel.blt(96, 32, 0, *cactuses[[0,1,2][f]].getRect())
         pyxel.blt(80, 32, 0, *cactuses[[3,4,5][f]].getRect())
 
-        # === ptera ===(24, 24)
+        # === ptera === (24, 24)
         pte_w, pte_h = 24,24
         pyxel.text(130, 80, "PTERA", (pyxel.frame_count//3)%15 + 1)
         pteras = [Rect(pte_w*i, 56, pte_w, pte_h) for i in range(2) ]
