@@ -2,7 +2,6 @@ import pyxel
 from utils import *
 from constants import (WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS, ANIM_FPS,
-                       HIGH_SCORE, SCORE,
                        COLKEY,
                        DEBUG)
 

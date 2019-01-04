@@ -3,9 +3,9 @@ import pyxel
 import random
 from utils import *
 from player import *
-from constants import (WINDOW_WIDTH, WINDOW_HEIGHT,
-                       CAPTION, FPS, ANIM_FPS,
-                       HIGH_SCORE, SCORE,
+from constants import (Score,
+                       WINDOW_WIDTH, WINDOW_HEIGHT,
+                       FPS, ANIM_FPS,
                        COLKEY,
                        DEBUG)
 
@@ -38,6 +38,7 @@ class Enemy:
     SPAWN_POS          = 280
     GND_HEIGHT         = 73
     PTERA_SPAWN_RATIO  = .4    # ptera spawn rate [0 - 1]
+    INIT_VELOCITY_X    = -4    # initail velocity of enemy
 
     COLLIDE_OFFSET = 4         # between [0 - Player_img_size]
                                # 小さいほど厳しい判定
@@ -47,7 +48,7 @@ class Enemy:
         self.showInfo()
 
     def initialize(self):
-        self.velocity = Vec(-4, 0)
+        self.velocity = Vec(Enemy.INIT_VELOCITY_X, 0)
         interval = random.randrange(self.MIN_INTERVAL, self.MAX_INTERVAL)
         self.INIT_POS = [Vec(self.SPAWN_POS + i*self.MAX_INTERVAL + interval,
                              self.GND_HEIGHT) for i in range(self.ENEMY_NUM)]
@@ -68,6 +69,8 @@ class Enemy:
     def update(self):
         if Player.getState()=="IDLE":
             return
+        # update pos, velocity, interval
+        self.updateVelAndIntrvl()
         if pyxel.frame_count%2:
             for i in range(len(self.pos)):
                 self.pos[i] = Vec(self.pos[i].x + self.velocity.x,
@@ -81,11 +84,11 @@ class Enemy:
                 spawn_x = max(self.pos[i-1].x, self.SPAWN_POS)
                 self.pos[i] = Vec(spawn_x + interval, self.GND_HEIGHT)
 
-                # select cactus or ptera
+                # select cactus or ptera at random
                 if random.random() < self.PTERA_SPAWN_RATIO:  # ptera
                     self.cur_anim[i] = Enemy.PTERA_ANIMs[0]
                     self.pos[i].y -= 40*random.randrange(0, 2)
-                else:                                               # cactus
+                else:                                         # cactus
                     self.cur_anim[i] = Enemy.CACTUS_ANIMs[random.randrange(0, 2)]
 
         if self.collideWithPlayer():
@@ -115,9 +118,13 @@ class Enemy:
                 pyxel.text(50, i*10,
                         "Enemy{}: ({},{})".format(i, pos.x, pos.y), ColPal.orange)
 
-    def getVelocity(self):
-        # TODO: change velocity along the score increase
-        return self.velocity
+    def updateVelAndIntrvl(self):
+        # TODO: adjast the coefs
+        dif = (Score.getScore()//100)
+        vel_x = self.INIT_VELOCITY_X - dif
+        self.velocity = Vec(vel_x, 0)
+        self.MIN_INTERVAL = 85 + 15*dif
+        self.MAX_INTERVAL = 150 + 15*dif
 
 
 class BackGround:
@@ -133,27 +140,30 @@ class BackGround:
     GND_normal = Rect(0, 128, GND_W, GND_H)
     GND_INIT_POS = [Vec(0, 88), Vec(GND_W, 88), Vec(2*GND_W, 88)]
 
+    INIT_VELOCITY_X = -4
+
 
     def __init__(self):
         self.initialize()
         self.showInfo()
 
     def initialize(self):
-        self.cloud_velocity = Vec(-1, 0)
-        self.gnd_velocity   = Vec(-4, 0) # change with enemy's velocity
+        self.cloud_velocity = Vec(self.INIT_VELOCITY_X//4, 0)
+        self.gnd_velocity   = Vec(self.INIT_VELOCITY_X,    0) # same with enemy's velocity
         # cloud pos(list)
         self.cloud_pos = deepcopy(self.CLOUD_INIT_POS)
 
-        # ground pos
+        # ground pos(list)
         self.gnd_pos   = deepcopy(self.GND_INIT_POS)
 
     def showInfo(self):
-        # print("hello")
         pass
 
     def update(self):
         if Player.getState()=="IDLE":
             return
+        # update velocity, pos
+        self.updateVel()
         if pyxel.frame_count%2:
             for i in range(len(self.cloud_pos)):
                 self.cloud_pos[i] = Vec(self.cloud_pos[i].x + self.cloud_velocity.x,
@@ -180,3 +190,9 @@ class BackGround:
         for i,pos in enumerate(self.gnd_pos):
             pyxel.blt(pos.x, pos.y,
                       BackGround.IMG_ID, *BackGround.GND_normal.getRect())
+
+    def updateVel(self):
+        # TODO: adjast the coefs
+        dif = (Score.getScore()//100)
+        vel_x = self.INIT_VELOCITY_X - dif
+        self.velocity = Vec(vel_x, 0)

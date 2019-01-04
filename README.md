@@ -17,7 +17,6 @@ Avoid enemies with __SPACE__ key.
 
 - No sound effect
 - High score is kept
-- Game speed is constant now
-- feel free to use sprite.
+- feel free to use sprite
 
 ![sprite](https://github.com/dannyso16/pynasour/blob/master/media/sprite.gif)
