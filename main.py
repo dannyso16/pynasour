@@ -2,6 +2,7 @@ import pyxel
 from utils import *
 from player import *
 from enemy import *
+import music
 from constants import (Score,
                        WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS,
