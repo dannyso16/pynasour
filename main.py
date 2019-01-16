@@ -2,6 +2,7 @@ import pyxel
 from utils import *
 from player import *
 from enemy import *
+import music
 from constants import (Score,
                        WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS,
@@ -46,6 +47,7 @@ class App:
                 self.backgnd.initialize()
                 self.enemy.initialize()
                 self.player.initialize()
+                music.start_music()
 
     def draw(self):
         global WINDOW_HEIGHT, WINDOW_WIDTH, DEBUG
