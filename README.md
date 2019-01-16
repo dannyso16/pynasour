@@ -15,7 +15,7 @@ Avoid enemies with __SPACE__ key.
 
 ### Features
 
-- No sound effect
+- SFX and BGM (New!)
 - High score is kept
 - feel free to use sprite
 
