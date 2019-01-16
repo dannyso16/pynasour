@@ -1,5 +1,6 @@
 import pyxel
 from utils import *
+import music
 from constants import (WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS, ANIM_FPS,
                        COLKEY,
@@ -45,6 +46,7 @@ class Player:
             (pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.KEY_SPACE))):
             self.velocity = Vec(0,-Player.JUMP_VELOCITY)
             Player.state = "JUMP"
+            music.sfx_jump()
 
         if (Player.state=="JUMP"):
             if pyxel.frame_count%Player.JUMP_DURING_TIME==0:
@@ -53,6 +55,7 @@ class Player:
                 if Player.pos.y >= Player.INITIAL_POS.y: # 地面に着地したら
                     Player.pos = Player.INITIAL_POS
                     Player.state = "RUN"
+                    music.sfx_ground()
 
         if Player.state=="IDLE":
             pass
@@ -75,6 +78,8 @@ class Player:
     @classmethod
     def beGameover(cls):
         cls.state = "IDLE"
+        music.stop_music()
+        music.sfx_death()
 
     @classmethod
     def getPos(cls):

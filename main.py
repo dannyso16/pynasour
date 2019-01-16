@@ -46,6 +46,7 @@ class App:
                 self.backgnd.initialize()
                 self.enemy.initialize()
                 self.player.initialize()
+                music.start_music()
 
     def draw(self):
         global WINDOW_HEIGHT, WINDOW_WIDTH, DEBUG
