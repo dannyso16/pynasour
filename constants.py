@@ -1,4 +1,5 @@
-from utils import *
+from utils import Vec, ColPal, Rect
+import pyxel
 
 # if True, show every object's position
 DEBUG = False

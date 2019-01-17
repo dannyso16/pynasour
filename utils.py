@@ -69,22 +69,22 @@ class Vec:
 
 class ColPal:
     """color pallete for pyxel"""
-    black = 0
-    navy = 1
-    purple = 2
-    green = 3
-    brown = 4
-    gray_dark = 5
+    black      = 0
+    navy       = 1
+    purple     = 2
+    green      = 3
+    brown      = 4
+    gray_dark  = 5
     gray_light = 6
-    white = 7
-    red = 8
-    orange = 9
-    yellow = 10
-    lime = 11
-    cyan = 12
+    white      = 7
+    red        = 8
+    orange     = 9
+    yellow     = 10
+    lime       = 11
+    cyan       = 12
     steel_blue = 13
-    pink = 14
-    peach = 15
+    pink       = 14
+    peach      = 15
 
     def __init__(self):
         """black, navy, purple, green,

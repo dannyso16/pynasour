@@ -1,16 +1,17 @@
 import pyxel
-from utils import *
-from player import *
-from enemy import *
+from utils import Vec, ColPal, Rect
+from player import Player
+from enemy import Enemy, BackGround
 import music
 from constants import (Score,
                        WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS,
+                       COLKEY,
                        DEBUG)
 
 # === MAIN ===
 class App:
-    # restart BUTTOn
+    # restart BUTTON
     IMG_ID = 0
     BTN_W, BTN_H = 32, 32
     BTN_RESTART = Rect(0, 96, BTN_W, BTN_H, COLKEY)

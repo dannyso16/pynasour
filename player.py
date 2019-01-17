@@ -1,5 +1,5 @@
 import pyxel
-from utils import *
+from utils import Vec, ColPal, Rect
 import music
 from constants import (WINDOW_WIDTH, WINDOW_HEIGHT,
                        CAPTION, FPS, ANIM_FPS,

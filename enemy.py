@@ -1,8 +1,8 @@
 from copy import deepcopy
 import pyxel
 import random
-from utils import *
-from player import *
+from utils import Vec, ColPal, Rect
+from player import Player
 from constants import (Score,
                        WINDOW_WIDTH, WINDOW_HEIGHT,
                        FPS, ANIM_FPS,
