@@ -7,11 +7,15 @@ Avoid enemies with __SPACE__ key.
 
 
 
-### Installation
+### Installation 
 
-1. Install Python and pyxel.  `pip install pyxel`  
+1. Install Python and pyxel.  `pip install pyxel==1.1.8`  
 2. Clone and copy this repository
 3. `python main.py`
+
+WARNING: Install the previous version of `pyxel` please. (This is because the file extension of asset was changed in version 1.2.0 or more)
+
+
 
 ### Features
 
