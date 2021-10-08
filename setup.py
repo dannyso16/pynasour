@@ -17,7 +17,7 @@ setup(
     install_requires=['pyxel==1.1.8'],
     entry_points={
         'console_scripts': [
-            'deepl=pynasour.main:main'
+            'pynasour=pynasour.main:main'
         ]
     }
 )
