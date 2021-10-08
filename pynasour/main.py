@@ -1,13 +1,12 @@
+import pkg_resources
 import pyxel
-from utils import Vec, ColPal, Rect
-from player import Player
-from enemy import Enemy, BackGround
-import music
-from constants import (Score,
-                       WINDOW_WIDTH, WINDOW_HEIGHT,
-                       CAPTION, FPS,
-                       COLKEY,
-                       DEBUG)
+
+from . import music
+from .constants import CAPTION, COLKEY, DEBUG, FPS, WINDOW_HEIGHT, WINDOW_WIDTH, Score
+from .enemy import BackGround, Enemy
+from .player import Player
+from .utils import ColPal, Rect
+
 
 # === MAIN ===
 class App:
@@ -22,12 +21,13 @@ class App:
 
         # === Generate Instances ===
         self.player = Player()
-        self.enemy  = Enemy()
-        self.backgnd  =  BackGround()
+        self.enemy = Enemy()
+        self.backgnd = BackGround()
         # TODO: make game title
-        self.player.beGameover() # not good way ...
+        self.player.beGameover()  # not good way ...
 
-        pyxel.load("asset/asset.pyxel")
+        images = pkg_resources.resource_filename(__name__, "asset/asset.pyxel")
+        pyxel.load(images)
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -36,11 +36,11 @@ class App:
         self.player.update()
 
         # score update
-        if Player.getState()!="IDLE":
+        if Player.getState() != "IDLE":
             Score.update()
 
         # === Restart ===
-        if Player.getState()=="IDLE":
+        if Player.getState() == "IDLE":
             if pyxel.btnp(pyxel.KEY_SPACE):
                 Score.saveHighScore()
                 # initialize state
@@ -58,15 +58,29 @@ class App:
         self.player.blt()
 
         # show score
-        pyxel.text(WINDOW_WIDTH-50, 5, "HI {}  {}".format(
-                    Score.getHighScore(), Score.getScore()), ColPal.white)
+        pyxel.text(
+            WINDOW_WIDTH - 50,
+            5,
+            "HI {}  {}".format(Score.getHighScore(), Score.getScore()),
+            ColPal.white,
+        )
         # if gameover, show restart button
-        if Player.getState()=="IDLE":
-            pyxel.text(WINDOW_WIDTH//2-5, WINDOW_HEIGHT//2-5,
-                        "GAME OVER\n[SPACE] TO CONTINUE", ColPal.white)
-            pyxel.blt(WINDOW_WIDTH//2-48, WINDOW_HEIGHT//2-16,
-                        App.IMG_ID, *App.BTN_RESTART.getRect())
+        if Player.getState() == "IDLE":
+            pyxel.text(
+                WINDOW_WIDTH // 2 - 5,
+                WINDOW_HEIGHT // 2 - 5,
+                "GAME OVER\n[SPACE] TO CONTINUE",
+                ColPal.white,
+            )
+            pyxel.blt(
+                WINDOW_WIDTH // 2 - 48,
+                WINDOW_HEIGHT // 2 - 16,
+                App.IMG_ID,
+                *App.BTN_RESTART.getRect()
+            )
 
         if DEBUG:
             pyxel.text(0, 20, "Frame: {}".format(pyxel.frame_count), ColPal.orange)
+
+
 App()
