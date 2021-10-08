@@ -11,7 +11,7 @@ setup(
     url='https://github.com/dannyso16/pynasour',
     author='dannyso16',
     packages=find_packages(),
-    python_requires='>=3',
+    python_requires='>=3.6.8',
     include_package_data=True,
     package_data={'': ['assets/*']},
     install_requires=['pyxel==1.1.8'],
