@@ -6,7 +6,7 @@
 
 """
 
-import pyxel
+import pyxel  # type: ignore
 
 
 def sfx_jump():

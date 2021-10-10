@@ -1,4 +1,4 @@
-import pyxel
+import pyxel  # type: ignore
 
 from . import music
 from .constants import ANIM_FPS, COLKEY, DEBUG

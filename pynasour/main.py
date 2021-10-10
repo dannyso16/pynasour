@@ -1,5 +1,5 @@
 import pkg_resources
-import pyxel
+import pyxel  # type: ignore
 
 from . import music
 from .constants import CAPTION, COLKEY, DEBUG, FPS, WINDOW_HEIGHT, WINDOW_WIDTH, Score

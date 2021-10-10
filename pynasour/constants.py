@@ -1,5 +1,5 @@
 import pkg_resources
-import pyxel
+import pyxel  # type: ignore
 
 from .utils import ColPal
 
