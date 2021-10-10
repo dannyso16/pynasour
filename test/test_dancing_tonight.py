@@ -9,7 +9,8 @@ from pynasour.enemy import Rect
 class App:
     def __init__(self):
         pyxel.init(120, 60, caption="Sprites")
-        images = pkg_resources.resource_filename("pynasour", "asset/asset.pyxel")
+        images = pkg_resources.resource_filename(
+            "pynasour", "asset/asset.pyxel")
         pyxel.load(images)
         pyxel.run(self.update, self.draw)
 
@@ -18,9 +19,7 @@ class App:
             pyxel.quit()
 
     def draw(self):
-        # colorpalette is defined [0 - 15]
-        # when you set interger over 15, it looks interesting
-        pyxel.cls(25)
+        pyxel.cls(0)  # background is black
 
         # === dino === (24, 32)
         dino_w, dino_h = 24, 32
