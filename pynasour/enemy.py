@@ -1,7 +1,7 @@
 import random
 from copy import deepcopy
 
-import pyxel
+import pyxel  # type: ignore
 
 from .constants import ANIM_FPS, COLKEY, DEBUG, Score
 from .player import Player

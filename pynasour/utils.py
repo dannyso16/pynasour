@@ -1,9 +1,9 @@
-# TODO: colpal to enum
+"""TODO: colpal to enum"""
 import gzip
 import os
 import pickle
 
-import pyxel
+import pyxel  # type: ignore
 
 """(function) margeAndSave
 (class) Vec
