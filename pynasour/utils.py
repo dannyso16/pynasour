@@ -1,8 +1,8 @@
 # TODO: colpal to enum
 import gzip
-import inspect
 import os
 import pickle
+
 import pyxel
 
 """(function) margeAndSave
@@ -11,6 +11,7 @@ import pyxel
 (class) Rect
 """
 
+
 def margePyxelFiles(img_file_path, music_file_path, save_to):
     """img_file + music_file -> marged_file
     assume 'pixel-artist' and 'music-maker' work together
@@ -18,25 +19,23 @@ def margePyxelFiles(img_file_path, music_file_path, save_to):
     # FIXME: the game-window never ended Corretly
     # check all file extension is .pyxel
     try:
-        assert os.path.basename(img_file_path).split(".")[-1]   == "pyxel"
+        assert os.path.basename(img_file_path).split(".")[-1] == "pyxel"
         assert os.path.basename(music_file_path).split(".")[-1] == "pyxel"
-        assert os.path.basename(save_to).split(".")[-1]         == "pyxel"
+        assert os.path.basename(save_to).split(".")[-1] == "pyxel"
     except AssertionError:
         print("AssertionError: Check file paths (extension must be .pyxel)")
 
     # === Constants from constants.py===
-    RENDERER_IMAGE_COUNT=4
+    RENDERER_IMAGE_COUNT = 4
     AUDIO_SOUND_COUNT = 65
     AUDIO_MUSIC_COUNT = 8
 
-    pyxel.init(1,1) # need to pyxel.load
+    pyxel.init(1, 1)  # need to pyxel.load
     data = {"version": pyxel.VERSION}
 
     # load img data from 'img_file_path'
     pyxel.load(img_file_path)
-    image_list = [
-        pyxel.image(i).data.dumps() for i in range(RENDERER_IMAGE_COUNT - 1)
-    ]
+    image_list = [pyxel.image(i).data.dumps() for i in range(RENDERER_IMAGE_COUNT - 1)]
     data["image"] = image_list
 
     # tilemap_list = [
@@ -63,28 +62,31 @@ def margePyxelFiles(img_file_path, music_file_path, save_to):
 
 class Vec:
     """2d coordinate"""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+
 class ColPal:
     """color pallete for pyxel"""
-    black      = 0
-    navy       = 1
-    purple     = 2
-    green      = 3
-    brown      = 4
-    gray_dark  = 5
+
+    black = 0
+    navy = 1
+    purple = 2
+    green = 3
+    brown = 4
+    gray_dark = 5
     gray_light = 6
-    white      = 7
-    red        = 8
-    orange     = 9
-    yellow     = 10
-    lime       = 11
-    cyan       = 12
+    white = 7
+    red = 8
+    orange = 9
+    yellow = 10
+    lime = 11
+    cyan = 12
     steel_blue = 13
-    pink       = 14
-    peach      = 15
+    pink = 14
+    peach = 15
 
     def __init__(self):
         """black, navy, purple, green,
