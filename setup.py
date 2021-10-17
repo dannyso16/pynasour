@@ -2,7 +2,7 @@ from setuptools import find_packages, setup  # type: ignore
 
 setup(
     name='pynasour',
-    version="1.1",
+    version="1.1.1",
     description='chrome dino clone in python 3',
     description_content_type='',
     license='MIT License',
